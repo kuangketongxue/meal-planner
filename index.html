@@ -3,148 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大学食堂智能菜单规划系统</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>大学餐饮智能规划系统</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🍱 大学食堂智能菜单规划系统</h1>
-            <p>开源节流 + 营养健康 + 聪明聚餐</p>
+            <h1>🍽️ 大学餐饮智能规划系统</h1>
+            <p class="subtitle">健康营养 · 开源节流 · 智能推荐</p>
         </header>
 
-        <nav class="tabs">
-            <button class="tab-btn active" data-tab="daily">📅 每日食堂安排</button>
-            <button class="tab-btn" data-tab="friend">👥 朋友聚餐推荐</button>
-            <button class="tab-btn" data-tab="setting">⚙️ 菜单管理</button>
-        </nav>
+        <!-- 导航标签 -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('meal')">每日餐饮安排</button>
+            <button class="tab-btn" onclick="switchTab('gathering')">聚餐推荐</button>
+            <button class="tab-btn" onclick="switchTab('settings')">数据管理</button>
+        </div>
 
-        <!-- 标签页1：每日安排 -->
-        <section id="daily" class="tab-content active">
-            <div class="section-title">每日食堂菜单随机安排</div>
-            
-            <div class="setting-group">
-                <label>📊 你的饮食目标：</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" id="budgetMode" checked> 开源节流（优先便宜菜）</label>
-                    <label><input type="checkbox" id="healthMode" checked> 营养健康（均衡搭配）</label>
-                    <label><input type="checkbox" id="noPork"> 不吃猪肉</label>
-                    <label><input type="checkbox" id="noSpicy"> 不吃辣</label>
-                    <label><input type="checkbox" id="vegetarian"> 素食主义者</label>
+        <!-- 每日餐饮模块 -->
+        <div id="meal-tab" class="tab-content active">
+            <div class="card">
+                <h2>📅 本周餐饮计划</h2>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>每日预算：</label>
+                        <input type="number" id="daily-budget" value="30" min="10" max="100">
+                        <span>元</span>
+                    </div>
+                    <div class="control-group">
+                        <label>营养偏好：</label>
+                        <select id="nutrition-preference">
+                            <option value="balanced">均衡营养</option>
+                            <option value="protein">高蛋白</option>
+                            <option value="lowfat">低脂肪</option>
+                            <option value="vegetarian">素食为主</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="generateWeeklyMeals()">生成本周计划</button>
+                    <button class="btn btn-secondary" onclick="generateSingleMeal()">随机一餐</button>
+                </div>
+                <div id="weekly-plan" class="weekly-plan"></div>
+            </div>
+
+            <div class="card stats-card">
+                <h3>📊 本周统计</h3>
+                <div id="week-stats" class="stats-grid"></div>
+            </div>
+        </div>
+
+        <!-- 聚餐推荐模块 -->
+        <div id="gathering-tab" class="tab-content">
+            <div class="card">
+                <h2>👥 聚餐推荐系统</h2>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>参与朋友：</label>
+                        <div id="friends-checkboxes" class="checkbox-group"></div>
+                    </div>
+                    <div class="control-group">
+                        <label>预算范围：</label>
+                        <select id="gathering-budget">
+                            <option value="low">经济实惠 (人均30-50)</option>
+                            <option value="medium">中等消费 (人均50-100)</option>
+                            <option value="high">豪华聚餐 (人均100+)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="recommendRestaurant()">智能推荐</button>
+                </div>
+                <div id="restaurant-recommendation" class="recommendation-result"></div>
+            </div>
+
+            <div class="card">
+                <h3>🏪 餐厅历史记录</h3>
+                <div id="restaurant-history" class="history-list"></div>
+            </div>
+        </div>
+
+        <!-- 数据管理模块 -->
+        <div id="settings-tab" class="tab-content">
+            <div class="card">
+                <h2>🍜 菜单管理</h2>
+                <div class="menu-input">
+                    <h3>添加新菜品</h3>
+                    <div class="form-grid">
+                        <input type="text" id="dish-name" placeholder="菜品名称">
+                        <input type="number" id="dish-price" placeholder="价格" step="0.5">
+                        <select id="dish-category">
+                            <option value="主食">主食</option>
+                            <option value="荤菜">荤菜</option>
+                            <option value="素菜">素菜</option>
+                            <option value="汤">汤</option>
+                            <option value="小吃">小吃</option>
+                        </select>
+                        <select id="dish-nutrition">
+                            <option value="high-protein">高蛋白</option>
+                            <option value="high-fiber">高纤维</option>
+                            <option value="low-fat">低脂肪</option>
+                            <option value="balanced">均衡</option>
+                        </select>
+                        <button class="btn btn-success" onclick="addDish()">添加菜品</button>
+                    </div>
+                    <div id="dish-list" class="dish-list"></div>
                 </div>
             </div>
 
-            <div class="button-group">
-                <button class="btn-primary" id="generateDaily">🎲 为我生成今日菜单</button>
-                <button class="btn-secondary" id="resetDaily">🔄 重新生成</button>
-            </div>
-
-            <div id="dailyResult" class="result-box">
-                <div class="meal-plan">
-                    <div class="meal-item">
-                        <h3>早餐</h3>
-                        <p id="breakfast">点击生成菜单</p>
+            <div class="card">
+                <h2>👨‍🎓 朋友管理</h2>
+                <div class="friend-input">
+                    <h3>添加朋友信息</h3>
+                    <div class="form-grid">
+                        <input type="text" id="friend-name" placeholder="朋友姓名">
+                        <select id="friend-preference">
+                            <option value="无限制">无限制</option>
+                            <option value="不吃辣">不吃辣</option>
+                            <option value="不吃海鲜">不吃海鲜</option>
+                            <option value="素食主义">素食主义</option>
+                            <option value="清真">清真</option>
+                        </select>
+                        <button class="btn btn-success" onclick="addFriend()">添加朋友</button>
                     </div>
-                    <div class="meal-item">
-                        <h3>午餐</h3>
-                        <p id="lunch">点击生成菜单</p>
-                    </div>
-                    <div class="meal-item">
-                        <h3>晚餐</h3>
-                        <p id="dinner">点击生成菜单</p>
-                    </div>
-                </div>
-                <div class="nutrition-info" id="nutritionInfo"></div>
-                <div class="price-info" id="priceInfo"></div>
-            </div>
-        </section>
-
-        <!-- 标签页2：朋友聚餐 -->
-        <section id="friend" class="tab-content">
-            <div class="section-title">朋友聚餐推荐系统</div>
-
-            <div class="friend-setup">
-                <h3>添加朋友信息</h3>
-                <div class="form-group">
-                    <input type="text" id="friendName" placeholder="朋友名字" maxlength="20">
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" class="friendTag" value="noPork"> 不吃猪肉</label>
-                        <label><input type="checkbox" class="friendTag" value="noBeef"> 不吃牛肉</label>
-                        <label><input type="checkbox" class="friendTag" value="noSpicy"> 不吃辣</label>
-                        <label><input type="checkbox" class="friendTag" value="vegetarian"> 素食</label>
-                        <label><input type="checkbox" class="friendTag" value="budget"> 平价优先</label>
-                    </div>
-                    <button class="btn-primary" id="addFriend">➕ 添加朋友</button>
+                    <div id="friend-list" class="friend-list"></div>
                 </div>
             </div>
 
-            <div class="friend-list">
-                <h3>已添加朋友</h3>
-                <div id="friendsList" class="list"></div>
-            </div>
-
-            <div class="restaurant-setup">
-                <h3>添加餐馆</h3>
-                <div class="form-group">
-                    <input type="text" id="restaurantName" placeholder="餐馆名称" maxlength="30">
-                    <select id="restaurantType">
-                        <option value="川菜">川菜</option>
-                        <option value="粤菜">粤菜</option>
-                        <option value="日料">日料</option>
-                        <option value="西餐">西餐</option>
-                        <option value="素食">素食</option>
-                        <option value="火锅">火锅</option>
-                        <option value="烤肉">烤肉</option>
-                    </select>
-                    <input type="number" id="restaurantScore" placeholder="评分 (1-5)" min="1" max="5" step="0.1">
-                    <input type="number" id="restaurantPrice" placeholder="人均消费 (¥)" min="10" max="500">
-                    <button class="btn-primary" id="addRestaurant">➕ 添加餐馆</button>
+            <div class="card">
+                <h2>🏪 餐厅管理</h2>
+                <div class="restaurant-input">
+                    <h3>添加餐厅</h3>
+                    <div class="form-grid">
+                        <input type="text" id="restaurant-name" placeholder="餐厅名称">
+                        <select id="restaurant-type">
+                            <option value="川菜">川菜</option>
+                            <option value="粤菜">粤菜</option>
+                            <option value="火锅">火锅</option>
+                            <option value="烧烤">烧烤</option>
+                            <option value="西餐">西餐</option>
+                            <option value="日韩料理">日韩料理</option>
+                            <option value="快餐">快餐</option>
+                            <option value="其他">其他</option>
+                        </select>
+                        <select id="restaurant-price">
+                            <option value="low">经济实惠</option>
+                            <option value="medium">中等消费</option>
+                            <option value="high">豪华消费</option>
+                        </select>
+                        <input type="number" id="restaurant-rating" placeholder="评分(1-5)" min="1" max="5" step="0.5">
+                        <textarea id="restaurant-tags" placeholder="适合人群标签(用逗号分隔，如: 不吃辣,素食主义)"></textarea>
+                        <button class="btn btn-success" onclick="addRestaurant()">添加餐厅</button>
+                    </div>
+                    <div id="restaurant-list" class="restaurant-list"></div>
                 </div>
             </div>
-
-            <div class="restaurant-list">
-                <h3>已添加餐馆</h3>
-                <div id="restaurantsList" class="list"></div>
-            </div>
-
-            <button class="btn-primary btn-large" id="recommendRestaurant">🎯 根据朋友推荐最佳餐馆</button>
-            
-            <div id="recommendResult" class="result-box" style="display:none;">
-                <h3>推荐结果</h3>
-                <div id="recommendDetails"></div>
-            </div>
-        </section>
-
-        <!-- 标签页3：菜单管理 -->
-        <section id="setting" class="tab-content">
-            <div class="section-title">菜单管理</div>
-            
-            <div class="menu-editor">
-                <h3>编辑菜单（JSON格式）</h3>
-                <textarea id="menuJson" rows="20" placeholder="在此编辑菜单JSON..."></textarea>
-                <button class="btn-primary" id="saveMenu">💾 保存菜单</button>
-                <button class="btn-secondary" id="exportMenu">📥 导出菜单</button>
-            </div>
-
-            <details>
-                <summary>📖 菜单格式说明</summary>
-                <pre><code>{
-  "breakfast": [
-    {
-      "name": "馄饨汤",
-      "price": 5,
-      "nutrition": "碳水:15g 蛋白:8g 脂肪:3g",
-      "type": "汤类",
-      "contains": ["猪肉"]
-    }
-  ],
-  "lunch": [...],
-  "dinner": [...]
-}</code></pre>
-            </details>
-        </section>
+        </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
