@@ -640,3 +640,105 @@ select:focus,
         box-shadow: none;
     }
 }
+/* ========== 页脚样式 ========== */
+.footer {
+    margin-top: 4rem;
+    padding: 3rem 0 2rem;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* 提示信息 */
+.footer-tip {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: rgba(255,255,255,0.7);
+}
+
+.footer-tip code {
+    background: rgba(255,255,255,0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: #FFD700;
+}
+
+/* 社交媒体链接 */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-link:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.social-link.wechat:hover {
+    background: linear-gradient(135deg, #07C160, #00D65D);
+}
+
+.social-link.github:hover {
+    background: linear-gradient(135deg, #333, #24292e);
+}
+
+.social-link.x:hover {
+    background: linear-gradient(135deg, #000, #14171A);
+}
+
+/* 版权信息 */
+.copyright {
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+.copyright p {
+    margin: 0.5rem 0;
+}
+
+.copyright small {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .footer {
+        padding: 2rem 0 1.5rem;
+    }
+    
+    .social-links {
+        gap: 1rem;
+    }
+    
+    .social-link {
+        width: 42px;
+        height: 42px;
+        font-size: 1.3rem;
+    }
+}
